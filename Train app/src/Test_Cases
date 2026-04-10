@@ -1,0 +1,49 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class TrainConsistFilterTest {
+
+    @Test
+    void testFilter_CapacityGreaterThanThreshold() {
+        List<Bogie> bogies = Arrays.asList(
+            new Bogie("1", "Sleeper", 72),
+            new Bogie("2", "AC Chair", 50)
+        );
+
+        // Filter: Capacity > 60
+        List<Bogie> result = bogies.stream()
+                                   .filter(b -> b.getCapacity() > 60)
+                                   .collect(Collectors.toList());
+
+        // Tests: Only the Sleeper (72) should be in the result
+        assertEquals(1, result.size());
+        assertEquals(72, result.get(0).getCapacity());
+    }
+
+    @Test
+    void testFilter_CapacityEqualToThreshold() {
+        List<Bogie> bogies = Arrays.asList(new Bogie("1", "Sleeper", 70));
+        
+        // Filter: Capacity > 70
+        List<Bogie> result = bogies.stream()
+                                   .filter(b -> b.getCapacity() > 70)
+                                   .collect(Collectors.toList());
+
+        // Tests: Bogies with capacity equal to 70 are excluded
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testFilter_OriginalListUnchanged() {
+        List<Bogie> bogies = new ArrayList<>(Arrays.asList(new Bogie("1", "Sleeper", 72)));
+        int originalSize = bogies.size();
+
+        // Perform stream operation
+        bogies.stream().filter(b -> b.getCapacity() > 80).collect(Collectors.toList());
+
+        // Tests: The original list size and contents remain the same
+        assertEquals(originalSize, bogies.size());
+    }
+}
