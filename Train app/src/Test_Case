@@ -1,0 +1,44 @@
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
+
+public class TrainConsistReductionTest {
+
+    @Test
+    void testReduce_TotalSeatCalculation() {
+        List<Bogie> bogies = Arrays.asList(
+            new Bogie("B1", "Sleeper", 70),
+            new Bogie("B2", "AC Chair", 30)
+        );
+
+        int total = bogies.stream()
+                          .map(Bogie::getCapacity)
+                          .reduce(0, Integer::sum);
+
+        // Tests: The computed total equals the sum of all bogie capacities (70 + 30 = 100)
+        assertEquals(100, total);
+    }
+
+    @Test
+    void testReduce_EmptyBogieList() {
+        List<Bogie> emptyList = new ArrayList<>();
+        
+        int total = emptyList.stream()
+                             .map(Bogie::getCapacity)
+                             .reduce(0, Integer::sum);
+
+        // Tests: The resulting total seating capacity is 0 for an empty list
+        assertEquals(0, total);
+    }
+
+    @Test
+    void testReduce_OriginalListUnchanged() {
+        List<Bogie> bogies = new ArrayList<>(Arrays.asList(new Bogie("B1", "Sleeper", 72)));
+        int originalSize = bogies.size();
+
+        bogies.stream().map(Bogie::getCapacity).reduce(0, Integer::sum);
+
+        // Tests: The original list size and contents remain the same after stream processing
+        assertEquals(originalSize, bogies.size());
+    }
+}
